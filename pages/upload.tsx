@@ -7,8 +7,6 @@ interface props {
   url: string;
 }
 const upload: FC<props> = ({url}) => {
-  const [image, setImage] = useState(null);
-  console.log(image);
   const handler = (e) => {
     console.log(e.target?.files);
     const formdata = new FormData();
