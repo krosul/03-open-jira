@@ -1,4 +1,3 @@
-import {GetServerSideProps} from 'next';
 import React, {FC, useState} from 'react';
 import entriesApi from '../apis/entriesApi';
 import path from 'path';
@@ -7,7 +6,7 @@ interface props {
   url: string;
 }
 const upload: FC<props> = ({url}) => {
-  const handler = (e) => {
+  const handler = (e: any) => {
     console.log(e.target?.files);
     const formdata = new FormData();
     formdata.append('file', e.target.files[0]);
