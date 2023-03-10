@@ -26,7 +26,7 @@ const upload: FC<props> = ({url}) => {
           onChange={(e) => handler(e)}
         />
       </label>
-      <video src="/mono-8216.mp4" autoPlay controls={false} loop />
+      <img src="/mountains-7831286_1280.webp" />
     </div>
   );
 };
