@@ -11,9 +11,9 @@ export const config = {
 const readFile = (req: NextApiRequest, saveLocally: boolean) => {
   const options: formidable.Options = {};
   if (saveLocally) {
-    options.uploadDir = path.join(process.cwd(), '/content/images');
+    options.uploadDir = path.join(process.cwd(), '/public');
     options.filename = (name, ext, path, form) => {
-      return Date.now().toString() + '_' + path.originalFilename;
+      return '' + path.originalFilename;
     };
   }
   const form = formidable(options);
