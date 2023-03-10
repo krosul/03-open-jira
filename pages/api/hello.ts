@@ -1,18 +1,38 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-type Data = {
-  ok: boolean;
-  message: string;
-  method?: string;
-  secret?: string;
+import {NextApiHandler, NextApiRequest} from 'next';
+import formidable from 'formidable';
+import path from 'path';
+import fs from 'fs/promises';
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 };
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res
-    .status(200)
-    .json({ ok: true, message: 'todo bien', secret: process.env.SECRET_KEY });
-}
+const readFile = (req: NextApiRequest, saveLocally: boolean) => {
+  const options: formidable.Options = {};
+  if (saveLocally) {
+    options.uploadDir = path.join(process.cwd(), '/content/images');
+    options.filename = (name, ext, path, form) => {
+      return Date.now().toString() + '_' + path.originalFilename;
+    };
+  }
+  const form = formidable(options);
+  return new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err);
+      resolve({fields, files});
+    });
+  });
+};
+
+const handler: NextApiHandler = async (req, res) => {
+  try {
+    await fs.readdir(path.join(process.cwd() + '/content', '/images'));
+  } catch (err) {
+    await fs.mkdir(path.join(process.cwd() + '/content', '/images'));
+  }
+  await readFile(req, true);
+  return res.json({message: 'all good'});
+};
+
+export default handler;
