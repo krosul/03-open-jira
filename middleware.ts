@@ -1,6 +1,6 @@
 // middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import {NextResponse} from 'next/server';
+import type {NextRequest} from 'next/server';
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
@@ -8,8 +8,6 @@ export function middleware(request: NextRequest) {
     const checkMongoIDRegExp = new RegExp('^[0-9a-fA-F]{24}$');
 
     const id = request.nextUrl.pathname.replace('/api/entries/', '');
-
-    console.log({ id });
 
     if (!checkMongoIDRegExp.test(id)) {
       const url = request.nextUrl.clone();

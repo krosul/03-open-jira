@@ -1,5 +1,5 @@
-import { ChangeEvent, FC, useState, useContext } from 'react';
-import { GetServerSideProps } from 'next';
+import {ChangeEvent, FC, useState, useContext} from 'react';
+import {GetServerSideProps} from 'next';
 import {
   Button,
   Card,
@@ -19,12 +19,12 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-import { MainLayout } from '../../components/layouts';
-import { EntryStatus, Entry } from '../../interfaces/entry';
+import {MainLayout} from '../../components/layouts';
+import {EntryStatus, Entry} from '../../interfaces/entry';
 
-import { dbEntries } from '../../database';
-import { EntriesContext } from '../../context/entries';
-import { dateFunction } from '../../utils';
+import {dbEntries} from '../../database';
+import {EntriesContext} from '../../context/entries';
+import {dateFunction} from '../../utils';
 
 const dataStatus: EntryStatus[] = ['pending', 'inProgress', 'finished'];
 
@@ -32,11 +32,11 @@ interface Props {
   entry: Entry;
 }
 
-const EntryPage: FC<Props> = ({ entry }) => {
+const EntryPage: FC<Props> = ({entry}) => {
   const [InputValue, setInputValue] = useState(entry.description);
   const [Status, setStatus] = useState<EntryStatus>(entry.status);
   const [Touched, setTouched] = useState(false);
-  const { updatedEntry } = useContext(EntriesContext);
+  const {updatedEntry} = useContext(EntriesContext);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -46,7 +46,6 @@ const EntryPage: FC<Props> = ({ entry }) => {
   };
 
   const handleClick = () => {
-    console.log({ InputValue, Status });
     if (!InputValue.length) return;
     const newEntry: Entry = {
       ...entry,
@@ -57,18 +56,16 @@ const EntryPage: FC<Props> = ({ entry }) => {
   };
   return (
     <MainLayout>
-      <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
+      <Grid container justifyContent="center" sx={{marginTop: 2}}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
             <CardHeader
               title="Entrada:"
-              subheader={`Creade hace:${dateFunction.getFormatDate(
-                entry.createdAt
-              )} `}
+              subheader={`Creade hace:${dateFunction.getFormatDate(entry.createdAt)} `}
             />
             <CardContent>
               <TextField
-                sx={{ marginTop: 2, marginBottom: 1 }}
+                sx={{marginTop: 2, marginBottom: 1}}
                 fullWidth
                 placeholder="Nueva entrada"
                 autoFocus
@@ -77,9 +74,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
                 value={InputValue}
                 onChange={handleChange}
                 onBlur={() => setTouched(true)}
-                helperText={
-                  !InputValue.length && Touched && `Ingresa algun valor`
-                }
+                helperText={!InputValue.length && Touched && `Ingresa algun valor`}
                 error={!InputValue.length && Touched}
               />
 
@@ -97,7 +92,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
                 </RadioGroup>
               </FormControl>
             </CardContent>
-            <CardActions sx={{ display: 'flex', justifyContent: 'end' }}>
+            <CardActions sx={{display: 'flex', justifyContent: 'end'}}>
               <Button
                 startIcon={<SaveIcon />}
                 variant="contained"
@@ -128,8 +123,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
 // - Only if you need to pre-render a page whose data must be fetched at request time
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  console.log(ctx.params);
-  const { id } = ctx.params as { id: string };
+  const {id} = ctx.params as {id: string};
   const entry = await dbEntries.getEntryById(id);
   if (!entry) {
     return {
@@ -139,7 +133,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-  console.log(entry);
 
   return {
     props: {

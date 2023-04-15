@@ -1,22 +1,22 @@
-import { useContext } from "react";
+import {useContext} from 'react';
 
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import { Box, TextField } from "@mui/material";
-import { ChangeEvent, useState } from "react";
-import { EntriesContext } from "../../context/entries/EntriesContext";
-import { UIContext } from "../../context/ui/UIContext";
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import {Box, TextField} from '@mui/material';
+import {ChangeEvent, useState} from 'react';
+import {EntriesContext} from '../../context/entries/EntriesContext';
+import {UIContext} from '../../context/ui/UIContext';
 
 export const NewEntry = () => {
   const [isAdding, setIsAdding] = useState(false);
-  const [InputValue, setInputValue] = useState("");
+  const [InputValue, setInputValue] = useState('');
   const [Touched, setTouched] = useState(false);
-
-  const { addNewEntry } = useContext(EntriesContext);
-  const { addingEntry, addingNotEntry, isAddingEntry } = useContext(UIContext);
+  const [inputTitle, setInputTitle] = useState('');
+  const {addNewEntry} = useContext(EntriesContext);
+  const {addingEntry, addingNotEntry, isAddingEntry} = useContext(UIContext);
   const handleChange = (e: ChangeEvent) => {
-    const { value } = e.target as HTMLInputElement;
+    const {value} = e.target as HTMLInputElement;
     setInputValue(value);
   };
 
@@ -24,12 +24,12 @@ export const NewEntry = () => {
     if (!InputValue.length) return;
     addNewEntry(InputValue);
     addingNotEntry();
-    setInputValue("");
+    setInputValue('');
     setTouched(false);
   };
 
   return (
-    <Box sx={{ marginBottom: 2, paddingX: 1 }}>
+    <Box sx={{marginBottom: 2, paddingX: 1}}>
       {isAddingEntry ? (
         <>
           <Button startIcon={<AddBoxIcon />} fullWidth variant="outlined">
@@ -38,9 +38,21 @@ export const NewEntry = () => {
 
           <TextField
             fullWidth
-            sx={{ marginTop: 3, marginBottom: 1 }}
-            placeholder="Nueva entrada"
+            sx={{marginTop: 3, marginBottom: 1}}
+            placeholder="Titulo"
             autoFocus
+            multiline
+            value={inputTitle}
+            label="Mi primera tarea"
+            helperText="ingrese un valor"
+            onChange={handleChange}
+            onBlur={() => setTouched(true)}
+            error={inputTitle.length <= 0 && Touched}
+          />
+          <TextField
+            fullWidth
+            sx={{marginTop: 3, marginBottom: 1}}
+            placeholder="Nueva entrada"
             multiline
             value={InputValue}
             label="Nueva entrada"
@@ -50,11 +62,7 @@ export const NewEntry = () => {
             error={InputValue.length <= 0 && Touched}
           />
           <Box display="flex" justifyContent="space-around">
-            <Button
-              variant="text"
-              color="secondary"
-              onClick={() => addingEntry()}
-            >
+            <Button variant="text" color="secondary" onClick={() => addingEntry()}>
               Cancelar
             </Button>
             <Button

@@ -7,7 +7,5 @@ type Data = {
 };
 
 export default async function (req: NextApiRequest, res: NextApiResponse<Data>) {
-  const file = await fs.readdir(path.join(process.cwd() + '/content', '/images'));
-  console.log(file);
   res.status(200).json({name: 'Example'});
 }

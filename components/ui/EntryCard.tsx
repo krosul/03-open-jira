@@ -1,21 +1,21 @@
-import { FC, DragEvent, useContext } from 'react';
-import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import {FC, DragEvent, useContext} from 'react';
+import {Card, CardActionArea, CardContent, CardHeader, Typography} from '@mui/material';
 import CardActions from '@mui/material/CardActions';
-import { Entry } from '../../interfaces';
-import { UIContext } from '../../context/ui';
-import { useRouter } from 'next/router';
-import { dateFunction } from '../../utils';
+import {Entry} from '../../interfaces';
+import {UIContext} from '../../context/ui';
+import {useRouter} from 'next/router';
+import {dateFunction} from '../../utils';
 
+const backgrounsdStatus = {pending: '#2c387e', finished: '#00a152', inProgress: '#aa2e25'};
 interface Props {
   entry: Entry;
 }
 
-export const EntryCard: FC<Props> = ({ entry }) => {
-  const { description, status, createdAt, _id } = entry;
+export const EntryCard: FC<Props> = ({entry}) => {
+  const {description, status, createdAt, _id, title} = entry;
   const router = useRouter();
-  const { startDraggin, endDraggin } = useContext(UIContext);
+  const {startDraggin, endDraggin, isDragging} = useContext(UIContext);
   const onDragStart = (e: DragEvent) => {
-    console.log(e);
     e.dataTransfer.setData('id', _id);
     startDraggin();
   };
@@ -31,6 +31,8 @@ export const EntryCard: FC<Props> = ({ entry }) => {
       sx={{
         marginBottom: 1,
         opaticy: 0,
+        backgroundColor: backgrounsdStatus[status],
+        position: 'relative',
       }}
       draggable
       onDragStart={onDragStart}
@@ -39,14 +41,11 @@ export const EntryCard: FC<Props> = ({ entry }) => {
     >
       <CardActionArea>
         <CardContent>
-          <Typography sx={{ whiteSpace: 'pre-line' }}>{description}</Typography>
+          <Typography sx={{position: 'absolute', top: 2, left: 5}}>{title}</Typography>
+          <Typography sx={{whiteSpace: 'pre-line', mt: 2, ml: 0.8}}>{description}</Typography>
         </CardContent>
-        <CardActions
-          sx={{ display: 'flex', justifyContent: 'end', paddingRight: 2 }}
-        >
-          <Typography variant="body2">
-            {dateFunction.getFormatDate(createdAt)}
-          </Typography>
+        <CardActions sx={{display: 'flex', justifyContent: 'end', paddingRight: 2}}>
+          <Typography variant="body2">{dateFunction.getFormatDate(createdAt)}</Typography>
         </CardActions>
       </CardActionArea>
     </Card>
