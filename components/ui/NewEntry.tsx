@@ -13,16 +13,22 @@ export const NewEntry = () => {
   const [InputValue, setInputValue] = useState('');
   const [Touched, setTouched] = useState(false);
   const [inputTitle, setInputTitle] = useState('');
+  const [inputDescription, setInputDescription] = useState('');
   const {addNewEntry} = useContext(EntriesContext);
   const {addingEntry, addingNotEntry, isAddingEntry} = useContext(UIContext);
+
   const handleChange = (e: ChangeEvent) => {
     const {value} = e.target as HTMLInputElement;
-    setInputValue(value);
+    setInputTitle(value);
+  };
+  const handleChangeDescription = (e: ChangeEvent) => {
+    const {value} = e.target as HTMLInputElement;
+    setInputDescription(value);
   };
 
   const onSave = () => {
-    if (!InputValue.length) return;
-    addNewEntry(InputValue);
+    if (!inputTitle.length || !inputDescription.length) return;
+    addNewEntry(inputDescription, inputTitle);
     addingNotEntry();
     setInputValue('');
     setTouched(false);
@@ -54,12 +60,12 @@ export const NewEntry = () => {
             sx={{marginTop: 3, marginBottom: 1}}
             placeholder="Nueva entrada"
             multiline
-            value={InputValue}
+            value={inputDescription}
             label="Nueva entrada"
             helperText="ingrese un valor"
-            onChange={handleChange}
+            onChange={handleChangeDescription}
             onBlur={() => setTouched(true)}
-            error={InputValue.length <= 0 && Touched}
+            error={inputDescription.length <= 0 && Touched}
           />
           <Box display="flex" justifyContent="space-around">
             <Button variant="text" color="secondary" onClick={() => addingEntry()}>

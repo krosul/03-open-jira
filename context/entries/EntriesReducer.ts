@@ -1,15 +1,13 @@
-import { Entry } from '../../interfaces';
-import { EntriesState } from './';
+import {Entry} from '../../interfaces';
+import {EntriesState} from './';
 
 type EntriesActionType =
-  | { type: 'Entries - Add'; payload: Entry }
-  | { type: 'Entries - Updated'; payload: Entry }
-  | { type: 'Entries - Initial Load'; payload: Entry[] };
+  | {type: 'Entries - Add'; payload: Entry}
+  | {type: 'Entries - Updated'; payload: Entry}
+  | {type: 'Entries - Initial Load'; payload: Entry[]}
+  | {type: 'Entries - Sort on delete entry'; payload: string};
 
-export const EntriesReducer = (
-  state: EntriesState,
-  action: EntriesActionType
-): EntriesState => {
+export const EntriesReducer = (state: EntriesState, action: EntriesActionType): EntriesState => {
   switch (action.type) {
     case 'Entries - Add':
       return {
@@ -32,6 +30,11 @@ export const EntriesReducer = (
       return {
         ...state,
         entries: [...action.payload],
+      };
+    case 'Entries - Sort on delete entry':
+      return {
+        ...state,
+        entries: state.entries.filter((entry) => entry._id !== action.payload),
       };
     default:
       return state;

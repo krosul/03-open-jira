@@ -22,8 +22,8 @@ export const EntriesProVider: FC<Props> = ({children}) => {
 
   const {enqueueSnackbar} = useSnackbar();
 
-  const addNewEntry = async (description: string) => {
-    const {data} = await entriesApi.post<Entry>('/entries', {description});
+  const addNewEntry = async (description: string, title: string) => {
+    const {data} = await entriesApi.post<Entry>('/entries', {description, title});
     dispatch({type: 'Entries - Add', payload: data});
   };
 
@@ -54,9 +54,13 @@ export const EntriesProVider: FC<Props> = ({children}) => {
   useEffect(() => {
     refreshEntries();
   }, []);
-
+  const onDeleteEntry = async (id: string) => {
+    const {data} = await entriesApi.delete('/entries/' + id);
+    refreshEntries();
+    dispatch({type: 'Entries - Sort on delete entry', payload: id});
+  };
   return (
-    <EntriesContext.Provider value={{...state, addNewEntry, updatedEntry}}>
+    <EntriesContext.Provider value={{...state, addNewEntry, updatedEntry, onDeleteEntry}}>
       {children}
     </EntriesContext.Provider>
   );

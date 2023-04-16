@@ -25,6 +25,7 @@ import {EntryStatus, Entry} from '../../interfaces/entry';
 import {dbEntries} from '../../database';
 import {EntriesContext} from '../../context/entries';
 import {dateFunction} from '../../utils';
+import {useRouter} from 'next/router';
 
 const dataStatus: EntryStatus[] = ['pending', 'inProgress', 'finished'];
 
@@ -33,10 +34,11 @@ interface Props {
 }
 
 const EntryPage: FC<Props> = ({entry}) => {
+  const router = useRouter();
   const [InputValue, setInputValue] = useState(entry.description);
   const [Status, setStatus] = useState<EntryStatus>(entry.status);
   const [Touched, setTouched] = useState(false);
-  const {updatedEntry} = useContext(EntriesContext);
+  const {updatedEntry, onDeleteEntry} = useContext(EntriesContext);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -53,6 +55,11 @@ const EntryPage: FC<Props> = ({entry}) => {
       description: InputValue,
     };
     updatedEntry(newEntry);
+  };
+
+  const handleOnDelete = () => {
+    onDeleteEntry(entry._id);
+    router.replace('/');
   };
   return (
     <MainLayout>
@@ -106,6 +113,7 @@ const EntryPage: FC<Props> = ({entry}) => {
         </Grid>
       </Grid>
       <IconButton
+        onClick={() => handleOnDelete()}
         sx={{
           position: 'fixed',
           bottom: 30,
